@@ -29,10 +29,10 @@ func main() {
 
 	// CORS Middleware
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{
+		AllowedOrigins: []string{
 			"http://localhost:5173",
-			"https://6975f0d4dc0a6c0008033b62--eloquent-empanada-439f15.netlify.app/"
-	},
+			"https://YOUR-NETLIFY-APP.netlify.app",
+		},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
