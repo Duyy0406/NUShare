@@ -7,7 +7,7 @@ import {
     CircularProgress, 
     Box 
 } from '@mui/material';
-import Grid from '@mui/material/Grid2'; // Use the new Grid2 component
+import Grid from '@mui/material/Grid2';
 import client from '../api/client';
 import { useNavigate } from 'react-router-dom';
 
