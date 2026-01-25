@@ -57,7 +57,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Persist to database.
-	// This will fail if the username is not unique (due to model constraints).
 	if result := database.DB.Create(&user); result.Error != nil {
 		http.Error(w, "Username already exists", http.StatusConflict)
 		return
@@ -106,5 +105,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(AuthResponse{
 		Token:    token,
 		Username: user.Username,
+		IsAdmin:  user.IsAdmin,
 	})
 }
