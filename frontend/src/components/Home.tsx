@@ -1,13 +1,8 @@
 import { useEffect, useState } from 'react';
 import { 
-    Typography, 
-    Card, 
-    CardContent, 
-    CardActionArea, 
-    CircularProgress, 
-    Box 
+    Typography, Card, CardContent, CardActionArea, 
+    CircularProgress, Box, Stack 
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
 import client from '../api/client';
 import { useNavigate } from 'react-router-dom';
 
@@ -47,11 +42,11 @@ const Home = () => {
                 Discussion Topics
             </Typography>
 
-            <Grid container spacing={3}>
+            <Stack direction="row" useFlexGap flexWrap="wrap" spacing={3}>
                 {topics.map((topic) => (
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={topic.ID}>
-                        <Card elevation={2}>
-                            <CardActionArea onClick={() => navigate(`/topics/${topic.ID}`)}>
+                    <Box key={topic.ID} sx={{ flexGrow: 1, minWidth: '300px', maxWidth: '400px' }}>
+                        <Card elevation={2} sx={{ height: '100%' }}>
+                            <CardActionArea onClick={() => navigate(`/topics/${topic.ID}`)} sx={{ height: '100%' }}>
                                 <CardContent>
                                     <Typography variant="h5" component="div" color="primary">
                                         {topic.name}
@@ -62,9 +57,9 @@ const Home = () => {
                                 </CardContent>
                             </CardActionArea>
                         </Card>
-                    </Grid>
+                    </Box>
                 ))}
-            </Grid>
+            </Stack>
             
             {topics.length === 0 && (
                 <Typography variant="body1" color="text.secondary" textAlign="center" sx={{ mt: 4 }}>
