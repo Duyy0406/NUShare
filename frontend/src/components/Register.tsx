@@ -1,40 +1,38 @@
+/**
+ * Register.tsx
+ * User registration form
+ */
 import { useState } from 'react';
 import { TextField, Button, Box, Typography, Alert, Paper } from '@mui/material';
-import client, { setAuthToken } from '../api/client';
+import client from '../api/client';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await client.post('/login', { username, password });
-            const { token, is_admin } = response.data; // <--- Extract is_admin
-            
-            localStorage.setItem('token', token);
-            localStorage.setItem('isAdmin', String(is_admin)); // <--- Save it! ("true" or "false")
-            setAuthToken(token);
-            
-            navigate('/');
+            await client.post('/register', { username, password });
+            alert('Registration successful! Please login.');
+            navigate('/login');
         } catch (err) {
-            console.error(err);
-            setError('Invalid username or password');
+            setError('Registration failed. Username might already exist.');
         }
     };
 
     return (
         <Paper elevation={3} sx={{ p: 4, maxWidth: 400, mx: 'auto', mt: 8 }}>
             <Typography variant="h5" component="h1" gutterBottom textAlign="center">
-                Login
+                Register
             </Typography>
             
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
             
-            <Box component="form" onSubmit={handleLogin}>
+            <Box component="form" onSubmit={handleRegister}>
                 <TextField
                     fullWidth
                     label="Username"
@@ -50,26 +48,15 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <Button 
-                    fullWidth 
-                    variant="contained" 
-                    type="submit" 
-                    sx={{ mt: 2 }}
-                >
-                    Login
+                <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
+                    Register
                 </Button>
-                {/* Link to Register Page */}
-                <Button 
-                    fullWidth 
-                    variant="text" 
-                    onClick={() => navigate('/register')} 
-                    sx={{ mt: 1 }}
-                >
-                    Don't have an account? Register
+                <Button fullWidth variant="text" onClick={() => navigate('/login')} sx={{ mt: 1 }}>
+                    Already have an account? Login
                 </Button>
             </Box>
         </Paper>
     );
 };
 
-export default Login;
+export default Register;

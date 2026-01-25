@@ -54,13 +54,19 @@ func main() {
 		// Protected routes
 		r.Group(func(r chi.Router) {
 			r.Use(appMiddleware.Auth)
+
 			r.Get("/profile", func(w http.ResponseWriter, r *http.Request) {
-				w.Write([]byte("Access Granted: You are authenticated."))
+				w.Write([]byte("Access Granted"))
 			})
-			r.Post("/topics", handlers.CreateTopic)
 			r.Post("/posts", handlers.CreatePost)
 			r.Post("/comments", handlers.CreateComment)
 			r.Delete("/posts/{id}", handlers.DeletePost)
+
+			// Admin-only routes
+			r.Group(func(r chi.Router) {
+				r.Use(appMiddleware.AdminOnly)
+				r.Post("/topics", handlers.CreateTopic)
+			})
 		})
 	})
 

@@ -11,30 +11,27 @@ import (
 	"gorm.io/gorm"
 )
 
-// RegisterRequest defines the payload required for user registration.
 type RegisterRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-// LoginRequest defines the payload required for user authentication.
 type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-// AuthResponse acts as the standard Data Transfer Object (DTO) for successful authentication.
 type AuthResponse struct {
 	Token    string `json:"token"`
 	Username string `json:"username"`
+	IsAdmin  bool   `json:"is_admin"`
 }
 
-// Register handles the creation of a new user account.
-// It accepts a JSON body, hashes the password, and persists the user to the database.
+// Handles the creation of a new user account.
 func Register(w http.ResponseWriter, r *http.Request) {
 	var req RegisterRequest
 
-	// Decode the JSON request body
+	// Decodes the JSON request body
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return

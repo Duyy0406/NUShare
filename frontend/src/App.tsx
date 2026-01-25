@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Container, AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import Login from './components/Login';
+import Register from './components/Register'; // <--- New Import
 import Home from './components/Home';
 import TopicView from './components/TopicView';
 import PostView from './components/PostView';
@@ -36,7 +37,10 @@ const Navbar = () => {
                 {isLoggedIn ? (
                     <Button color="inherit" onClick={handleLogout}>Logout</Button>
                 ) : (
-                    <Button color="inherit" component={Link} to="/login">Login</Button>
+                    <>
+                        <Button color="inherit" component={Link} to="/login">Login</Button>
+                        <Button color="inherit" component={Link} to="/register">Register</Button> 
+                    </>
                 )}
             </Toolbar>
         </AppBar>
@@ -47,17 +51,17 @@ function App() {
     return (
         <BrowserRouter>
             <Navbar />
-
             {/* Main Page Content */}
             <Container maxWidth="md">
-              <Box sx={{ mt: 2 }}> 
-                  <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/topics/:id" element={<TopicView />} />
-                      <Route path="/posts/:id" element={<PostView />} />
-                  </Routes>
-              </Box>
+                <Box sx={{ mt: 2 }}>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} /> 
+                        <Route path="/topics/:id" element={<TopicView />} />
+                        <Route path="/posts/:id" element={<PostView />} />
+                    </Routes>
+                </Box>
             </Container>
         </BrowserRouter>
     );
