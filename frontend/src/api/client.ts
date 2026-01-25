@@ -1,8 +1,11 @@
 import axios from 'axios';
 
-// Creates a standard instance for all backend requests
+const baseURL = import.meta.env.PROD 
+  ? 'https://nushare.onrender.com/api'
+  : 'http://localhost:8080/api';
+
 const client = axios.create({
-  baseURL: 'http://localhost:8080/api'
+  baseURL: baseURL,
 });
 
 // Attaches the JWT token to requests
