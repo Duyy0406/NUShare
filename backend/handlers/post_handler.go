@@ -6,6 +6,8 @@ import (
 	"nushare-backend/database"
 	"nushare-backend/middleware"
 	"nushare-backend/models"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type CreatePostRequest struct {
@@ -49,4 +51,43 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(post)
+}
+
+func GetPost(w http.ResponseWriter, r *http.Request) {
+	postID := chi.URLParam(r, "id")
+	var post models.Post
+
+	// Preload User to display author name
+	if result := database.DB.Preload("User").First(&post, postID); result.Error != nil {
+		http.Error(w, "Post not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(post)
+}
+
+func DeletePost(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value(middleware.UserIDKey).(uint)
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	postID := chi.URLParam(r, "id")
+
+	var post models.Post
+	if result := database.DB.First(&post, postID); result.Error != nil {
+		http.Error(w, "Post not found", http.StatusNotFound)
+		return
+	}
+
+	if post.UserID != userID {
+		http.Error(w, "You are not allowed to delete this post", http.StatusForbidden)
+		return
+	}
+
+	database.DB.Delete(&post)
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Post deleted"))
 }

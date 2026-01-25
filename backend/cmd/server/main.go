@@ -11,11 +11,12 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Load .env variables (looks in the current folder where you run the command)
+	// Load .env variables
 	if err := godotenv.Load(); err != nil {
 		log.Println("Warning: No .env file found or error loading it")
 	}
@@ -25,6 +26,16 @@ func main() {
 
 	// Setup Router
 	r := chi.NewRouter()
+
+	// CORS Middleware
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 
 	// Middleware: Basic request logging and crash recovery
 	r.Use(middleware.Logger)
@@ -37,6 +48,7 @@ func main() {
 		r.Post("/login", handlers.Login)
 		r.Get("/topics", handlers.GetTopics)
 		r.Get("/topics/{id}", handlers.GetTopicPosts)
+		r.Get("/posts/{id}", handlers.GetPost)
 		r.Get("/posts/{id}/comments", handlers.GetPostComments)
 
 		// Protected routes
@@ -48,6 +60,7 @@ func main() {
 			r.Post("/topics", handlers.CreateTopic)
 			r.Post("/posts", handlers.CreatePost)
 			r.Post("/comments", handlers.CreateComment)
+			r.Delete("/posts/{id}", handlers.DeletePost)
 		})
 	})
 
