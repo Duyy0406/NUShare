@@ -1,0 +1,17 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nuGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EF7C2A" />
+      <stop offset="100%" stop-color="#003D7C" />
+    </linearGradient>
+  </defs>
+  <path d="M4 6C4 4.34315 5.34315 3 7 3H25C26.6569 3 28 4.34315 28 6V19C28 20.6569 26.6569 22 25 22H13L8 27V22H7C5.34315 22 4 20.6569 4 19V6Z" fill="url(#nuGradient)" />
+  <g fill="white">
+    <rect x="8" y="9" width="2.5" height="10" rx="1" />
+    <rect x="13.5" y="9" width="2.5" height="10" rx="1" />
+    <path d="M8 9L16 19L16 16.5L10.5 9H8Z" />
+    <path d="M18 9V14C18 15.6569 19.3431 17 21 17C22.6569 17 24 15.6569 24 14V9H21.5V14C21.5 14.2761 21.2761 14.5 21 14.5C20.7239 14.5 20.5 14.2761 20.5 14V9H18Z" />
+  </g>
+  <circle cx="21" cy="21" r="1.5" fill="#EF7C2A" opacity="0.8" />
+  <circle cx="25" cy="20" r="1" fill="#EF7C2A" opacity="0.6" />
+</svg>
