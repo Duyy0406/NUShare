@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { 
     Typography, Card, CardContent, CardActionArea, 
-    CircularProgress, Box, Stack 
+    CircularProgress, Box, Stack, Button,
+    Dialog, DialogTitle, DialogContent, TextField, DialogActions
 } from '@mui/material';
 import client from '../api/client';
 import { useNavigate } from 'react-router-dom';
@@ -15,32 +16,59 @@ interface Topic {
 const Home = () => {
     const [topics, setTopics] = useState<Topic[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
+    
+    const [open, setOpen] = useState(false);
+    const [name, setName] = useState('');
+    const [desc, setDesc] = useState('');
+    
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchTopics = async () => {
-            try {
-                const response = await client.get('/topics');
-                setTopics(response.data);
-            } catch (error) {
-                console.error("Failed to fetch topics:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchTopics = async () => {
+        try {
+            const response = await client.get('/topics');
+            setTopics(response.data);
+        } catch (error) {
+            console.error("Failed to fetch topics:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
+        const adminFlag = localStorage.getItem('isAdmin');
+        setIsAdmin(adminFlag === 'true');
         fetchTopics();
     }, []);
 
-    if (loading) {
-        return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
-    }
+    const handleCreateTopic = async () => {
+        try {
+            await client.post('/topics', { name, description: desc });
+            setOpen(false);
+            setName('');
+            setDesc('');
+            fetchTopics(); // Refresh list
+        } catch (error) {
+            alert("Failed to create topic. Ensure you are an admin.");
+        }
+    };
+
+    if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
 
     return (
         <Box sx={{ mt: 4 }}>
-            <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 4 }}>
-                Discussion Topics
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+                <Typography variant="h4" component="h1">
+                    Discussion Topics
+                </Typography>
+                
+                {/* Only show this button if isAdmin is true */}
+                {isAdmin && (
+                    <Button variant="contained" onClick={() => setOpen(true)}>
+                        New Topic
+                    </Button>
+                )}
+            </Box>
 
             <Stack direction="row" useFlexGap flexWrap="wrap" spacing={3}>
                 {topics.map((topic) => (
@@ -63,9 +91,28 @@ const Home = () => {
             
             {topics.length === 0 && (
                 <Typography variant="body1" color="text.secondary" textAlign="center" sx={{ mt: 4 }}>
-                    No topics found. (Use curl to create one!)
+                    No topics found.
                 </Typography>
             )}
+
+            {/* CREATE TOPIC DIALOG */}
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle>Create New Topic</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus margin="dense" label="Topic Name" fullWidth
+                        value={name} onChange={(e) => setName(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense" label="Description" fullWidth multiline rows={2}
+                        value={desc} onChange={(e) => setDesc(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Cancel</Button>
+                    <Button onClick={handleCreateTopic} variant="contained">Create</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
