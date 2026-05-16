@@ -189,7 +189,7 @@ This project was created as part of the CVWO (Computing for Voluntary Welfare Or
 ## 📧 Contact
 
 For questions or issues regarding this submission, please contact:
-- **Email**: e1351969@u.nus.edu
+- **Email**: e1375501@u.nus.edu
 - **GitHub**: [@Duyy0406](https://github.com/Duyy0406)
 
 ---
